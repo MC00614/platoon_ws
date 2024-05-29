@@ -13,7 +13,7 @@ class TruckDetection(Node):
     def __init__(self):
         super().__init__('truck_detection')
         
-        self.front_truck_pub = self.create_publisher(Pose, '/platooning/mc_truck1/front_truck', 10)
+        self.front_truck_pub = self.create_publisher(Pose, '/platoon/mc_truck1/front_truck', 10)
 
         self.front_lidar_sub = self.create_subscription(
             PointCloud2,
@@ -44,27 +44,54 @@ class TruckDetection(Node):
             # point_cloud.append([x, y, z])
 
         self.point_cloud_list.extend(point_cloud)
-
+        
+        n = len(self.point_cloud_list)
         min_distance_2 = math.inf
         min_distance_idx = -1
         distance_2_list = []
-        for i in range(len(self.point_cloud_list)):
+        for i in range(n):
             x = self.point_cloud_list[i][0]
             y = self.point_cloud_list[i][1]
             distance_2 = x*x + y*y
             if distance_2 < min_distance_2:
                 min_distance_idx = i
             distance_2_list.append(distance_2)
-        print(distance_2_list)
         
-        # L = [min_distance_idx]
-        # while L:
-        #     cur_idx = L.pop()
-        #     if 0 <= cur_idx:
+        average_x = 0
+        average_y = 0
+        index_count = 0
+        
+        distance_threshold_2 = 25
+        L = [min_distance_idx]
+        while L:
+            current_index = L.pop()
+            if (0 < current_index):
+                next_index = current_index - 1
+                if (abs(distance_2_list[next_index] - distance_2_list[current_index]) < distance_threshold_2):                    
+                    average_x += self.point_cloud_list[next_index][0]
+                    average_y += self.point_cloud_list[next_index][1]
+                    index_count += 1
+                    L.append(next_index)
+
+            elif (current_index + 1 < n):
+                next_index = current_index + 1
+                if (abs(distance_2_list[next_index] - distance_2_list[current_index]) < distance_threshold_2): 
+                    average_x += self.point_cloud_list[next_index][0]
+                    average_y += self.point_cloud_list[next_index][1]
+                    index_count += 1
+                    L.append(next_index)
+                    
+        average_x /= index_count
+        average_y /= index_count
+        
+        
+def publish_front_truck(self, x, y):
+    front_truck_msg = Pose()
+    front_truck_msg.position.x = x
+    front_truck_msg.position.y = y
+    self.front_truck_pub.publish(front_truck_msg)
                 
-        
                 
-        
 def main(args=None):
     rclpy.init(args=args)
 
