@@ -62,6 +62,12 @@ class TruckDetection(Node):
         average_y = 0
         index_count = 0
         
+        if min_distance_idx == -1:
+            average_x = 30.0
+            average_y = 0.0
+            self.publish_front_truck(average_x, average_y)
+            return
+
         distance_threshold_2 = 25
         L = [min_distance_idx]
         V = [False for _ in range(n)]
