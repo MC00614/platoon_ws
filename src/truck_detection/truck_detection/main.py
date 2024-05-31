@@ -55,41 +55,56 @@ class TruckDetection(Node):
             distance_2 = x*x + y*y
             if distance_2 < min_distance_2:
                 min_distance_idx = i
+                min_distance_2 = distance_2
             distance_2_list.append(distance_2)
-        
+
         average_x = 0
         average_y = 0
         index_count = 0
         
         distance_threshold_2 = 25
         L = [min_distance_idx]
+        V = [False for _ in range(n)]
+        V[min_distance_idx] = True
         while L:
             current_index = L.pop()
             if (0 < current_index):
                 next_index = current_index - 1
-                if (abs(distance_2_list[next_index] - distance_2_list[current_index]) < distance_threshold_2):                    
-                    average_x += self.point_cloud_list[next_index][0]
-                    average_y += self.point_cloud_list[next_index][1]
-                    index_count += 1
-                    L.append(next_index)
+                if V[next_index] == False:
+                    if (abs(distance_2_list[next_index] - distance_2_list[current_index]) < distance_threshold_2):
+                        average_x += self.point_cloud_list[next_index][0]
+                        average_y += self.point_cloud_list[next_index][1]
+                        index_count += 1
+                        V[next_index] = True
+                        L.append(next_index)
 
             elif (current_index + 1 < n):
                 next_index = current_index + 1
-                if (abs(distance_2_list[next_index] - distance_2_list[current_index]) < distance_threshold_2): 
-                    average_x += self.point_cloud_list[next_index][0]
-                    average_y += self.point_cloud_list[next_index][1]
-                    index_count += 1
-                    L.append(next_index)
-                    
-        average_x /= index_count
-        average_y /= index_count
+                if V[next_index] == False:
+                    if (abs(distance_2_list[next_index] - distance_2_list[current_index]) < distance_threshold_2): 
+                        average_x += self.point_cloud_list[next_index][0]
+                        average_y += self.point_cloud_list[next_index][1]
+                        index_count += 1
+                        V[next_index] = True
+                        L.append(next_index)
         
-        
-def publish_front_truck(self, x, y):
-    front_truck_msg = Pose()
-    front_truck_msg.position.x = x
-    front_truck_msg.position.y = y
-    self.front_truck_pub.publish(front_truck_msg)
+        if index_count != 0:
+            average_x /= index_count
+            average_y /= index_count
+        else:
+            average_x = 30.0
+            average_y = 0.0
+
+        self.publish_front_truck(average_x, average_y)
+        print(f'average_x = {average_x}')
+        print(f'average_y = {average_y}')
+        print(f'distance = {(average_x**2 + average_y**2)**0.5}')
+
+    def publish_front_truck(self, x, y):
+        front_truck_msg = Pose()
+        front_truck_msg.position.x = x
+        front_truck_msg.position.y = y
+        self.front_truck_pub.publish(front_truck_msg)
                 
                 
 def main(args=None):

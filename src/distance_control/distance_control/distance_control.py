@@ -1,4 +1,5 @@
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Float32
 from geometry_msgs.msg import Pose
 
@@ -11,13 +12,17 @@ class DistanceControl(Node):
         self.front_truck_sub = self.create_subscription(
             Pose,
             '/platoon/mc_truck1/front_truck',
-            self.front_truck_callback)
+            self.front_truck_callback,
+            qos_profile_sensor_data)
     
     def front_truck_callback(self, msg):
         front_truck_x = msg.position.x
         front_truck_y = msg.position.y
+
+        # brake_distance = 15
+        # throttle_distance = 
         
-        brake_distance_2 = 10 ** 2
+        brake_distance_2 = 15 ** 2
         throttle_distance_2 = 20 ** 2
         base_accel = 0.6
         
@@ -25,6 +30,8 @@ class DistanceControl(Node):
             velocity_control = -base_accel
         elif ((front_truck_x**2 + front_truck_y**2) > throttle_distance_2):
             velocity_control = base_accel
+        else:
+            velocity_control = 0.0
             
         self.publish_velocity_control(velocity_control)
             
