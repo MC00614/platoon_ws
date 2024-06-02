@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'distance_control'
+package_name = 'longitudianl_control'
 
 setup(
     name=package_name,
@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'distance_control = distance_control.main:main'
+            'distance_control = longitudianl_control.main_distance:main',
+            'velocity_control = longitudianl_control.main_velocity:main'
         ],
     },
 )
