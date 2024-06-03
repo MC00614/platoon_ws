@@ -3,6 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
+import argparse
 
 from sensor_msgs.msg import PointCloud2
 from geometry_msgs.msg import Pose
@@ -10,14 +11,18 @@ import numpy as np
 import math
 
 class TruckDetection(Node):
-    def __init__(self):
-        super().__init__('truck_detection')
+    def __init__(self, truck_id):
+        self.truck_id = truck_id
+        node_name = f'truck{self.truck_id}_truck_detection'
+        super().__init__(node_name)
         
-        self.front_truck_pub = self.create_publisher(Pose, '/platoon/truck1/front_truck_pose', 10)
+        topic_name = f'/platoon/truck{self.truck_id}/front_truck_pose'
+        self.front_truck_pose_pub = self.create_publisher(Pose, topic_name, 10)
 
+        topic_name = f'/truck{self.truck_id}/front_lidar'
         self.front_lidar_sub = self.create_subscription(
             PointCloud2,
-            '/truck1/front_lidar',
+            topic_name,
             self.front_lidar_callback,
             qos_profile_sensor_data)
         self.front_lidar_sub
@@ -115,8 +120,10 @@ class TruckDetection(Node):
                 
 def main(args=None):
     rclpy.init(args=args)
-
-    lane_detector = TruckDetection()
+    parser = argparse.ArgumentParser(description='Truck Detection Node')
+    parser.add_argument('--truck_id', type=int, help='Truck ID')
+    parsed_args, _ = parser.parse_known_args()
+    lane_detector = TruckDetection(truck_id=parsed_args.truck_id)
     rclpy.spin(lane_detector)
     lane_detector.destroy_node()
     rclpy.shutdown()
