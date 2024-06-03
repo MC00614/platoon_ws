@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from .class_image_processor import ImageProcessor
+
 from sensor_msgs.msg import Image
 
 import rclpy
@@ -11,7 +13,8 @@ import cv2
 class LaneDetection(Node):
     def __init__(self):
         super().__init__('lane_detection')
-        # subscriber
+        
+        self.image_processor = ImageProcessor()
 
         self.image_sub = self.create_subscription(
             Image,
@@ -43,8 +46,11 @@ class LaneDetection(Node):
         print(0)
         try:
             self.image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-            cv2.imshow("self.image", self.image)
-            cv2.waitKey(1)
+            self.image_processor.frame_processor(self.image)
+            # PUBLISH HERE
+            
+            # cv2.imshow("self.image", self.image)
+            # cv2.waitKey(1)
 
         except CvBridgeError as e:
             print(e)
