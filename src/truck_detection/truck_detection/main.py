@@ -115,7 +115,7 @@ class TruckDetection(Node):
         front_truck_msg = Pose()
         front_truck_msg.position.x = x
         front_truck_msg.position.y = y
-        self.front_truck_pub.publish(front_truck_msg)
+        self.front_truck_pose_pub.publish(front_truck_msg)
                 
                 
 def main(args=None):
