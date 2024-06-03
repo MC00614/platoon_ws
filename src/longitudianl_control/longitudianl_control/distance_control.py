@@ -45,9 +45,11 @@ class DistanceControl(Node):
         self.target_velocity = 0.0
         self.target_distance = 20.0
         self.velocity = 0.0
+        self.k_v = 0.1
         
         # Release Hand Brake
-        self.publish_optimal_velocity(1.0)
+        # self.publish_optimal_velocity(1.0)
+        # Changed in virtual_ws
 
         # LQR Controller
         dt = 1
@@ -82,7 +84,7 @@ class DistanceControl(Node):
 
         print(f'distance = {self.state[0]}')
 
-        optimal_velocity = np.dot(self.K, self.state)[0] / 100.0
+        optimal_velocity = self.k_v * np.dot(self.K, self.state)[0]
         print(f'optimal_velocity = {optimal_velocity}')
         if (0 < optimal_velocity < 0.05):
             optimal_velocity = 0.0
