@@ -50,7 +50,7 @@ class KeyboardControl(Node):
     def publish_steer_control(self, steer_control):
         steer_control_msg = Float32()
         steer_control_msg.data = steer_control
-        self.steer_control_publisher_.publish(steer_control_msg)
+        # self.steer_control_publisher_.publish(steer_control_msg)
         
     def publish_velocity_control(self, velocity_control):
         velocity_control_msg = Float32()
