@@ -13,11 +13,11 @@ class TruckDetection(Node):
     def __init__(self):
         super().__init__('truck_detection')
         
-        self.front_truck_pub = self.create_publisher(Pose, '/platoon/mc_truck1/front_truck', 10)
+        self.front_truck_pub = self.create_publisher(Pose, '/platoon/truck1/front_truck_pose', 10)
 
         self.front_lidar_sub = self.create_subscription(
             PointCloud2,
-            '/mc_truck1/front_lidar',
+            '/truck1/front_lidar',
             self.front_lidar_callback,
             qos_profile_sensor_data)
         self.front_lidar_sub

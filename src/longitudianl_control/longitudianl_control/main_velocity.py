@@ -1,10 +1,14 @@
 from .velocity_control import VelocityControl
 
 import rclpy
+import argparse
 
 def main(args=None):
     rclpy.init(args=args)
-    velocity_control = VelocityControl()
+    parser = argparse.ArgumentParser(description='Velocity Control Node')
+    parser.add_argument('--truck_id', type=int, help='Truck ID')
+    parsed_args, _ = parser.parse_known_args()
+    velocity_control = VelocityControl(truck_id=parsed_args.truck_id)
     rclpy.spin(velocity_control)
     velocity_control.destroy_node()
     rclpy.shutdown()

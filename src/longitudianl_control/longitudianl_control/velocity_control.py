@@ -1,28 +1,34 @@
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Float32
-from geometry_msgs.msg import Pose
 
 from collections import deque
-import control as ct
-import numpy as np
 
 class VelocityControl(Node):
+    def __init__(self, truck_id):
+        self.truck_id = truck_id
+        
+        node_name = f'truck{self.truck_id}_velocity_controller'
+        super().__init__(node_name)
+        
+        topic_name = f'/truck{self.truck_id}/velocity_control'
+        self.velocity_control_publisher_ = self.create_publisher(Float32, topic_name, 10)
 
-    def __init__(self):
-        super().__init__('velocity_control')
-        self.velocity_control_publisher_ = self.create_publisher(Float32, '/mc_truck0/velocity_control', 10)
-
-        self.target_velocity_sub = self.create_subscription(
-            Float32,
-            '/platoon/target_velocity',
-            self.target_velocity_callback,
-            qos_profile_sensor_data)
-
+        topic_name = f'/truck{self.truck_id}/velocity'
         self.ego_velocity_sub = self.create_subscription(
             Float32,
-            '/mc_truck0/velocity',
+            topic_name,
             self.ego_velocity_callback,
+            qos_profile_sensor_data)
+
+        if self.truck_id == 0:
+            topic_name = f'/platoon/target_velocity'
+        else:
+            topic_name = f'/platoon/truck{self.truck_id}/optimal_velocity'
+        self.target_velocity_sub = self.create_subscription(
+            Float32,
+            topic_name,
+            self.target_velocity_callback,
             qos_profile_sensor_data)
 
         # Initialize Variable
@@ -44,15 +50,19 @@ class VelocityControl(Node):
         
         self.publish_timer = self.create_timer(self.publish_interval, self.publish_timer_callback)
 
-    def target_velocity_callback(self, msg):
-        self.target_velocity = msg.data
-
     def ego_velocity_callback(self, msg):
         self.velocity = msg.data
     
+    def target_velocity_callback(self, msg):
+        self.target_velocity = msg.data
+        
     def publish_timer_callback(self):
         velocity_error = self.velocity - self.target_velocity
         self.error_list.append(velocity_error)
+        
+        if len(self.error_list) < 3:
+            return
+
         print(f'velocity_error = {velocity_error}')
 
         error_sign = 1.0
