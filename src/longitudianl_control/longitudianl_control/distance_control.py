@@ -45,7 +45,7 @@ class DistanceControl(Node):
         self.target_velocity = 0.0
         self.target_distance = 20.0
         self.velocity = 0.0
-        self.k_v = 0.1
+        self.k_v = 1.0
         
         # Release Hand Brake
         # self.publish_optimal_velocity(1.0)
@@ -55,7 +55,7 @@ class DistanceControl(Node):
         dt = 1
         A = np.array([[1]])
         B = np.array([[dt]])
-        Q = np.array([[0.1]])
+        Q = np.array([[0.2]])
         R = np.array([[0.1]])
         self.K, S, E = ct.lqr(A, B, Q, R)
         print(self.K)
@@ -82,7 +82,7 @@ class DistanceControl(Node):
 
         self.state[0] = truck_distance - self.target_distance
 
-        print(f'distance = {self.state[0]}')
+        # print(f'distance = {self.state[0]}')
 
         optimal_velocity = self.k_v * np.dot(self.K, self.state)[0]
         print(f'optimal_velocity = {optimal_velocity}')

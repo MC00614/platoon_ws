@@ -21,8 +21,8 @@ class JoystickControl(Node):
             velocity_control = gamepad_input.analog_stick_right.y * 0.6
             self.publish_steer_control(steer_control)
             self.publish_velocity_control(velocity_control)
-            print(f'steer_control = {steer_control}')
-            print(f'velocity_control = {velocity_control}')
+            # print(f'steer_control = {steer_control}')
+            # print(f'velocity_control = {velocity_control}')
         
     def publish_steer_control(self, steer_control):
         steer_control_msg = Float32()

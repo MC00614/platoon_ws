@@ -36,7 +36,7 @@ class VelocityControl(Node):
         self.velocity = 0.0
         self.max_throttle = 1.0
         self.min_throttle = 0.05
-        self.publish_interval = 0.1
+        self.publish_interval = 0.01
 
         # PID Controller
         self.k_p = 0.15

@@ -15,7 +15,7 @@ def generate_nodes(context, *, num_trucks):
     #         'config',
     #         'config.yaml') 
 
-    for i in range(int(num_trucks) + 1):
+    for i in range(int(num_trucks)):
         node = Node(
             package='longitudianl_control',
             executable='velocity_control',
