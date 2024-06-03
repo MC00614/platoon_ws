@@ -46,9 +46,10 @@ class LaneDetection(Node):
         print(0)
         try:
             self.image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-            self.image_processor.frame_processor(self.image)
+            middle_points = self.image_processor.frame_processor(self.image)
             # PUBLISH HERE
-            
+            # self.publish_lane(middle_points)
+
             # cv2.imshow("self.image", self.image)
             # cv2.waitKey(1)
 
