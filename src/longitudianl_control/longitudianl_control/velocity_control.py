@@ -64,7 +64,7 @@ class VelocityControl(Node):
         if len(self.error_list) < 3:
             return
 
-        print(f'velocity_error = {velocity_error}')
+        # print(f'velocity_error = {velocity_error}')
 
         error_sign = 1.0
         if velocity_error > 0:
@@ -82,7 +82,7 @@ class VelocityControl(Node):
             # print(f'control_i = {control_i}')
             # print(f'control_d = {control_d}')
             throttle_control = min(self.max_throttle, abs(control_p + control_i + control_d)) * error_sign
-        print(f'throttle_control = {throttle_control}')
+        # print(f'throttle_control = {throttle_control}')
 
         # throttle_control = min(self.min_throttle, )
         if (0 < throttle_control < 0.05):

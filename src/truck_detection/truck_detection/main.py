@@ -42,6 +42,8 @@ class TruckDetection(Node):
         for i in range(num_points):
             index = i * point_step
             x = np.frombuffer(data[index + offset_x:index + offset_x + 4], dtype=np.float32)[0]
+            if x < 0:
+                continue
             y = np.frombuffer(data[index + offset_y:index + offset_y + 4], dtype=np.float32)[0]
             point_cloud.append([x, y])
 
@@ -107,9 +109,9 @@ class TruckDetection(Node):
             average_y = 0.0
 
         self.publish_front_truck(average_x, average_y)
-        print(f'average_x = {average_x}')
-        print(f'average_y = {average_y}')
-        print(f'distance = {(average_x**2 + average_y**2)**0.5}')
+        # print(f'average_x = {average_x}')
+        # print(f'average_y = {average_y}')
+        # print(f'distance = {(average_x**2 + average_y**2)**0.5}')
 
     def publish_front_truck(self, x, y):
         front_truck_msg = Pose()

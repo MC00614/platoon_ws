@@ -21,7 +21,7 @@ class DistanceControl(Node):
             self.target_velocity_callback,
             qos_profile_sensor_data)
 
-        self.target_velocity_sub = self.create_subscription(
+        self.target_distance_sub = self.create_subscription(
             Float32,
             '/platoon/target_distance',
             self.target_distance_callback,
@@ -44,7 +44,8 @@ class DistanceControl(Node):
         # Initialize Variable
         self.target_velocity = 0.0
         self.target_distance = 20.0
-        self.velocity = 0.0
+        self.truck_distance = 20.0
+        self.ego_velocity = 0.0
         self.k_v = 1.0
         
         # Release Hand Brake
@@ -52,16 +53,19 @@ class DistanceControl(Node):
         # Changed in virtual_ws
 
         # LQR Controller
-        dt = 1
-        A = np.array([[1]])
-        B = np.array([[dt]])
-        Q = np.array([[0.2]])
-        R = np.array([[0.1]])
+        dt = 1.0
+        A = np.array([[1, dt], [0, 0.5]])
+        B = np.array([[dt], [0.5]])
+        Q = np.array([[0.25, 0], [0, 0.5]])
+        R = np.array([[0.15]])
         self.K, S, E = ct.lqr(A, B, Q, R)
         print(self.K)
 
-        self.state = np.array([self.target_distance])
+        self.state = np.array([self.target_distance, self.target_velocity])
         # np.transpose(self.state)
+
+        self.publish_interval = 0.01
+        self.publish_timer = self.create_timer(self.publish_interval, self.publish_timer_callback)
 
     def target_velocity_callback(self, msg):
         self.target_velocity = msg.data
@@ -70,7 +74,7 @@ class DistanceControl(Node):
         self.target_distance = msg.data
 
     def ego_velocity_callback(self, msg):
-        self.velocity = msg.data
+        self.ego_velocity = msg.data
     
     def front_truck_pose_callback(self, msg):
         front_truck_x = msg.position.x
@@ -78,14 +82,16 @@ class DistanceControl(Node):
 
         x_weight = 1.0
         y_weight = 0.5
-        truck_distance = (x_weight * (front_truck_x**2) + y_weight * (front_truck_y**2))**0.5
-
-        self.state[0] = truck_distance - self.target_distance
+        self.truck_distance = (x_weight * (front_truck_x**2) + y_weight * (front_truck_y**2))**0.5
+    
+    def publish_timer_callback(self):
+        self.state[0] = self.truck_distance - self.target_distance
+        self.state[1] = self.ego_velocity - self.target_velocity
 
         # print(f'distance = {self.state[0]}')
 
         optimal_velocity = self.k_v * np.dot(self.K, self.state)[0]
-        print(f'optimal_velocity = {optimal_velocity}')
+        # print(f'optimal_velocity = {optimal_velocity}')
         if (0 < optimal_velocity < 0.05):
             optimal_velocity = 0.0
 
