@@ -1,5 +1,6 @@
 import numpy as np
 import cv2 as cv
+import math
 
 class ImageProcessor():
     def __init__(self):
@@ -207,11 +208,27 @@ class ImageProcessor():
     
     def calculate_relative_path(self, middle, height, width):
         relative_middle = []
-        for point in middle:
-            if point is not None:
-                if point[0] < 0 or point[1] < 0:
+        for i in range(len(middle) - 1):
+            if middle[i] is not None and middle[i + 1] is not None:
+                x1, y1 = middle[i]
+                x2, y2 = middle[i + 1]
+                if x1 < 0 or y1 < 0 or x2 < 0 or y2 < 0:
                     continue
-                relative_x = width - point[0]
-                relative_y = height - point[1]
-                relative_middle.append((relative_x, relative_y))
+                relative_x1 = width - x1
+                relative_y1 = height - y1
+                relative_x2 = width - x2
+                relative_y2 = height - y2
+
+                yaw = math.atan2(relative_y2 - relative_y1, relative_x2 - relative_x1)
+                relative_middle.append((relative_x1, relative_y1, yaw))
+        
+        # Add the last point with the same yaw as the previous one
+        if middle[-1] is not None and relative_middle:
+            x, y = middle[-1]
+            if x >= 0 and y >= 0:
+                relative_x = width - x
+                relative_y = height - y
+                _, _, last_yaw = relative_middle[-1]
+                relative_middle.append((relative_x, relative_y, last_yaw))
+        
         return relative_middle
