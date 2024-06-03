@@ -123,9 +123,9 @@ def main(args=None):
     parser = argparse.ArgumentParser(description='Truck Detection Node')
     parser.add_argument('--truck_id', type=int, help='Truck ID')
     parsed_args, _ = parser.parse_known_args()
-    lane_detector = TruckDetection(truck_id=parsed_args.truck_id)
-    rclpy.spin(lane_detector)
-    lane_detector.destroy_node()
+    truck_detection = TruckDetection(truck_id=parsed_args.truck_id)
+    rclpy.spin(truck_detection)
+    truck_detection.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
