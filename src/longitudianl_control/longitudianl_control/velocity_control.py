@@ -45,8 +45,9 @@ class VelocityControl(Node):
         self.integral_scope = 10 # Larger than 3
         self.error_list = deque(maxlen=self.integral_scope)
         
-        # Release Hand Brake
-        self.publish_velocity_control(1.0)
+        # # Release Hand Brake
+        # self.publish_velocity_control(1.0)
+        # Changed in virtual_ws
         
         self.publish_timer = self.create_timer(self.publish_interval, self.publish_timer_callback)
 
