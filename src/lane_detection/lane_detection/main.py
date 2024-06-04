@@ -8,6 +8,7 @@ import rclpy
 from rclpy.node import Node
 from cv_bridge import CvBridge, CvBridgeError
 from rclpy.qos import qos_profile_sensor_data
+import argparse
 
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped, Quaternion
@@ -70,7 +71,7 @@ class LaneDetection(Node):
             pose_stamped.pose.orientation = self.yaw_to_quaternion(point[2])
             path_msg.poses.append(pose_stamped)
 
-        self.path_publisher0.publish(path_msg)
+        self.path_publisher.publish(path_msg)
     
     def yaw_to_quaternion(self, yaw):
         quaternion = Quaternion()
@@ -82,8 +83,10 @@ class LaneDetection(Node):
             
 def main(args=None):
     rclpy.init(args=args)
-
-    lane_detector = LaneDetection()
+    parser = argparse.ArgumentParser(description='Lane Detection Node')
+    parser.add_argument('--truck_id', type=int, help='Truck ID')
+    parsed_args, _ = parser.parse_known_args()
+    lane_detector = LaneDetection(truck_id=parsed_args.truck_id)
     rclpy.spin(lane_detector)
     lane_detector.destroy_node()
     rclpy.shutdown()
