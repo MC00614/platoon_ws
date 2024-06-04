@@ -3,13 +3,13 @@ import cv2 as cv
 
 class ImageProcessor():
     def __init__(self):
-        self.hsv_values = (0, 0, 235) #(0, 0, 160)
-        self.first_left_box_middle_x = 210      #Middlepoint of left Box
-        self.first_right_box_middle_x = 530    #Middlepoint of right Box
-        self.warp_parameters = [(240,270),(110 ,480),(420,270),(520,480)]    #Warping Parameters
-        self.num_boxes = 5      #Number of boxes
-        self.box_dim = (100, 100) # height, width
-        self.half_lane_width = 225	#assumpt half lane in pixels
+        self.hsv_values = (0, 0, 232) #(0, 0, 160)
+        self.first_left_box_middle_x = 100      #Middlepoint of left Box
+        self.first_right_box_middle_x = 540    #Middlepoint of right Box
+        self.warp_parameters = [(190,220),(85 ,480),(430,220),(520,480)]    #Warping Parameters tl, bl, tr, br
+        self.num_boxes = 3      #Number of boxes
+        self.box_dim = (150, 100) # height, width
+        self.half_lane_width = 270	#assumpt half lane in pixels
         # Hough Line Transform
         self.rho = 1			
         # Angle resolution of the accumulator in radians.
@@ -28,7 +28,7 @@ class ImageProcessor():
         frame_HSV = cv.cvtColor(warped_image, cv.COLOR_BGR2HSV)
         #values are tested in testing script "hsv_filter". the 3rd value can be ajusted between 150-200
         image_hsv = cv.inRange(frame_HSV, self.hsv_values, (180, 255, 255))
-        # cv.imshow('hsv', image_hsv)
+        cv.imshow('hsv', image_hsv)
 
         #apply the sliding window for left and right lane with base midpoint of lane at xm
         left, left_line = self.sliding_windows(image_hsv, warped_image, xm=self.first_left_box_middle_x)
