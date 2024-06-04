@@ -16,95 +16,44 @@ import math
 import cv2
 
 class LaneDetection(Node):
-    def __init__(self):
-        super().__init__('lane_detection')
+    def __init__(self, truck_id):
+        self.truck_id = truck_id
+        node_name = f'truck{self.truck_id}_lane_detection'
+        super().__init__(node_name)
         
         self.image_processor = ImageProcessor()
 
-        self.image_sub0 = self.create_subscription(
-            Image,
-            '/truck0/front_camera',
-            self.img_callback0,
-            qos_profile_sensor_data)
-        self.image_sub0
-        
-        self.image_sub1 = self.create_subscription(
-            Image,
-            '/mc_truck1/front_camera',
-            self.img_callback1,
-            qos_profile_sensor_data)
-        self.image_sub1 
-        
-        self.image_sub2 = self.create_subscription(
-            Image,
-            '/mc_truck2/front_camera',
-            self.img_callback2,
-            qos_profile_sensor_data)
-        self.image_sub2 
 
-        self.path_publisher0 = self.create_publisher(
-            Path, 
-            'truck0/path',
-            10)
+        topic_name = f'/truck{self.truck_id}/front_camera'
+        self.image_sub = self.create_subscription(
+            Image,
+            topic_name,
+            self.img_callback,
+            qos_profile_sensor_data)
+        self.image_sub
 
-        self.path_publisher1 = self.create_publisher(
-            Path, 
-            'truck1/path',
-            10)
+        topic_name = f'/platoon/truck{self.truck_id}/path'
+        self.path_publisher = self.create_publisher(Path, topic_name, 10)
 
-        self.path_publisher2 = self.create_publisher(
-            Path, 
-            'truck2/path',
-            10)
-        
         self.bridge = CvBridge()
-        self.image0 = None
-        self.image1 = None
-        self.image2 = None
+        self.image = None
 
-    def img_callback0(self, msg):
-        # print(0)
+    def img_callback(self, msg):
         try:
-            self.image0 = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-            middle_points = self.image_processor.frame_processor(self.image0)
-            height, width, channels = self.image0.shape
+            self.image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+            middle_points = self.image_processor.frame_processor(self.image)
+            height, width, channels = self.image.shape
             relative_points = self.image_processor.calculate_relative_path(middle_points, height, width)
             print(f"Middle Points : {relative_points}")
             # print(f"Height: {height}, Width: {width}, Channels: {channels}")
             # PUBLISH HERE
             self.publish_path(relative_points)
 
-            cv2.imshow("self.image0", self.image0)
+            cv2.imshow(f'truck {self.truck_id} image', self.image)
             cv2.waitKey(1)
 
         except CvBridgeError as e:
-            print(e0)
-
-    def img_callback1(self, msg):
-        # print(1)
-        try:
-            self.image1 = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-            middle_points = self.image_processor.frame_processor(self.image1)
-            height, width, channels = self.image1.shape
-            relative_points = self.image_processor.calculate_relative_path(middle_points, height, width)
-            cv2.imshow("self.image1", self.image1)
-            cv2.waitKey(1)
-
-        except CvBridgeError as e:
-            print(e1)
-
-    def img_callback2(self, msg):
-        print(2)
-        try:
-            self.image2 = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-            middle_points = self.image_processor.frame_processor(self.image2)
-            height, width, channels = self.image2.shape
-            relative_points = self.image_processor.calculate_relative_path(middle_points, height, width)
-            cv2.imshow("self.image2", self.image2)
-            cv2.waitKey(1)
-
-        except CvBridgeError as e:
-            print(e2)
+            print(e)
     
     def publish_path(self, relative_points):
         path_msg = Path()
