@@ -7,7 +7,6 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "nav_msgs/msg/path.hpp"
-#include "example_interfaces/msg/float64.hpp"
 #include "std_msgs/msg/float32.hpp"
 
 #include "tf2/LinearMath/Quaternion.h"
@@ -38,7 +37,7 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr velocity_subscription_;
 
     // Publish
-    rclcpp::Publisher<example_interfaces::msg::Float64>::SharedPtr steer_publisher_;
+    rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr steer_publisher_;
 
     rclcpp::TimerBase::SharedPtr publisher_timer_;
 
@@ -48,4 +47,6 @@ private:
     void publisher_timer_callback();
     void publish_steer(float steer);
     float quat_to_yaw(const geometry_msgs::msg::Quaternion quat);
+
+    float normalize_steer_command(float max_steer_deg);
 };

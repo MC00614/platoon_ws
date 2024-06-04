@@ -23,7 +23,6 @@ find_package(ament_cmake REQUIRED)
 
 find_package(rclcpp REQUIRED)
 find_package(nav_msgs REQUIRED)
-find_package(example_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 
 find_package(geometry_msgs REQUIRED)
@@ -56,7 +55,7 @@ add_executable(${PROJECT_NAME}
 ament_target_dependencies(${PROJECT_NAME} 
   rclcpp
   nav_msgs 
-  example_interfaces
+  std_msgs
 
   tf2 
   tf2_geometry_msgs 

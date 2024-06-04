@@ -2,7 +2,7 @@
 
 Control::Control() : rclcpp::Node("vehicle_control") {
     double k = 1.5;
-    double ks = 5.2;
+    double ks = 10.2;
 
     this->controller = Stanley(k, ks);
 
@@ -16,7 +16,7 @@ Control::Control() : rclcpp::Node("vehicle_control") {
         "/truck0/velocity", 10, std::bind(&Control::velocity_callback, this, std::placeholders::_1));
 
     // Publish
-    steer_publisher_ = this->create_publisher<example_interfaces::msg::Float64>(
+    steer_publisher_ = this->create_publisher<std_msgs::msg::Float32>(
          "/truck0/steer_control", 10);
 
     publisher_timer_ = this->create_wall_timer(
@@ -31,9 +31,9 @@ void Control::path_callback(const nav_msgs::msg::Path::SharedPtr path_msg) {
     Path refPose;
     for (size_t i = 0; i < path_msg->poses.size(); ++i) {
         refPose.x = path_msg->poses[i].pose.position.x;
-        refPose.y = path_msg->poses[i].pose.position.y;
+        refPose.y = path_msg->poses[i].pose.position.y * 10.0;
         refPose.yaw = this->quat_to_yaw(path_msg->poses[i].pose.orientation);
-        std::cout << "X : " << refPose.x << " Y : " << refPose.y << " Yaw : " << refPose.yaw << std::endl;
+        // std::cout << "X : " << refPose.x << " Y : " << refPose.y << " Yaw : " << refPose.yaw << std::endl;
         this->refPoses.push_back(refPose);
     }
     this->pathValid = true;
@@ -51,12 +51,16 @@ void Control::publisher_timer_callback() {
     this->controller.stanley_control(this->refPoses, this->current_velocity);
 
     this->steerCommand = this->controller.getDelta();
+    float normalize_steer= normalize_steer_command(3.5);
 
-    this->publish_steer(this->steerCommand);
+    // std::cout << "Steer Command : " << this->steerCommand * 180.0 / M_PI <<std::endl;
+    // std::cout << "Decision Steer : " << normalize_steer << std::endl;
+
+    this->publish_steer(normalize_steer);
 }
 
 void Control::publish_steer(float steer) {
-    auto steer_msg = std::make_unique<example_interfaces::msg::Float64>();
+    auto steer_msg = std::make_unique<std_msgs::msg::Float32>();
     steer_msg->data = steer;
     std::cout << " Publish Steering : " << steer << std::endl;
     this->steer_publisher_->publish(std::move(steer_msg));
@@ -71,4 +75,18 @@ float Control::quat_to_yaw(const geometry_msgs::msg::Quaternion quat) {
     tf2::Matrix3x3 matrix(tf2_quat);
     matrix.getRPY(roll, pitch, yaw);
     return yaw;
+}
+
+float Control::normalize_steer_command(float max_steer_deg) {
+    // float max_steer_rad = max_steer_deg * M_PI /180.0;
+
+    // Normalize the steer to the range -30 to 30
+
+    float steer_deg = ((this->steerCommand * 180.0 / M_PI) * (-1) + 90.0);
+
+    if (steer_deg > max_steer_deg) {steer_deg = max_steer_deg;}
+    else if (steer_deg < max_steer_deg * (-1)) {steer_deg = max_steer_deg * (-1);}
+    std::cout << "Steer Command : " << steer_deg <<std::endl;
+
+    return steer_deg;
 }
