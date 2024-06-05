@@ -1,6 +1,6 @@
 #include "control.h"
 
-Control::Control() : rclcpp::Node("vehicle_control") {
+Control::Control(int truck_id) : rclcpp::Node("truck" + std::to_string(truck_id) + "_lateral_control"), truck_id(truck_id) {
     double k = 1.5;
     double ks = 10.2;
 
@@ -10,14 +10,19 @@ Control::Control() : rclcpp::Node("vehicle_control") {
     this->velocityValid = false;
 
     // Subscribe
+    std::string topic_name;
+    topic_name = "/platoon/truck" + std::to_string(truck_id) + "/path";
     path_subscription_ = this->create_subscription<nav_msgs::msg::Path>(
-        "/truck0/path", 10, std::bind(&Control::path_callback, this,  std::placeholders::_1));
+        topic_name, 10, std::bind(&Control::path_callback, this,  std::placeholders::_1));
+
+    topic_name = "/truck" + std::to_string(truck_id) + "/velocity";
     velocity_subscription_ = this->create_subscription<std_msgs::msg::Float32>(
-        "/truck0/velocity", 10, std::bind(&Control::velocity_callback, this, std::placeholders::_1));
+        topic_name, 10, std::bind(&Control::velocity_callback, this, std::placeholders::_1));
 
     // Publish
+    topic_name = "/truck" + std::to_string(truck_id) + "/steer_control";
     steer_publisher_ = this->create_publisher<std_msgs::msg::Float32>(
-         "/truck0/steer_control", 10);
+        topic_name, 10);
 
     publisher_timer_ = this->create_wall_timer(
         std::chrono::milliseconds(100),
@@ -46,7 +51,7 @@ void Control::velocity_callback(const std_msgs::msg::Float32::SharedPtr velocity
 }
 
 void Control::publisher_timer_callback() {
-    if (!this->pathValid) { std::cout << "Message Receive Error" << std::endl; return;}
+    if (!this->pathValid) { std::cout << "Path Message Receive Error" << std::endl; return;}
 
     this->controller.stanley_control(this->refPoses, this->current_velocity);
 

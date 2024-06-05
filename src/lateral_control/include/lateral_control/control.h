@@ -19,9 +19,11 @@
 
 class Control : public rclcpp::Node {
 public:
-    Control();
+    Control(int truck_id);
 
 private:
+    int truck_id;
+
     Stanley controller;
 
     std::vector<Path> refPoses;

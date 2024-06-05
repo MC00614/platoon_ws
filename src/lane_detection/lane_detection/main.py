@@ -50,7 +50,7 @@ class LaneDetection(Node):
             # PUBLISH HERE
             self.publish_path(relative_points)
 
-            cv2.imshow(f'truck {self.truck_id} image', self.image)
+            # cv2.imshow(f'truck {self.truck_id} image', self.image)
             cv2.waitKey(1)
 
         except CvBridgeError as e:
