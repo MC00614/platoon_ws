@@ -8,8 +8,8 @@ class JoystickControl(Node):
     def __init__(self):
         super().__init__('joystick_control')
         self.shanwan_gamepad = ShanWanGamepad()
-        self.steer_control_publisher_ = self.create_publisher(Float32, '/mc_truck0/steer_control', 10)
-        self.velocity_control_publisher_ = self.create_publisher(Float32, '/mc_truck0/velocity_control', 10)
+        self.steer_control_publisher_ = self.create_publisher(Float32, '/truck0/steer_control', 10)
+        self.velocity_control_publisher_ = self.create_publisher(Float32, '/truck0/velocity_control', 10)
 
         while True:
             gamepad_input = self.shanwan_gamepad.read_data()

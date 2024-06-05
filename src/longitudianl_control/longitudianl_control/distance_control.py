@@ -56,8 +56,8 @@ class DistanceControl(Node):
         dt = 1.0
         A = np.array([[1, dt], [0, 0.5]])
         B = np.array([[dt], [0.5]])
-        Q = np.array([[0.25, 0], [0, 0.5]])
-        R = np.array([[0.15]])
+        Q = np.array([[0.15, 0], [0, 0.6]])
+        R = np.array([[0.25]])
         self.K, S, E = ct.lqr(A, B, Q, R)
         print(self.K)
 
@@ -83,6 +83,7 @@ class DistanceControl(Node):
         x_weight = 1.0
         y_weight = 0.5
         self.truck_distance = (x_weight * (front_truck_x**2) + y_weight * (front_truck_y**2))**0.5
+        # self.truck_distance = x_weight * front_truck_x + y_weight * (front_truck_y**2))**0.5
     
     def publish_timer_callback(self):
         self.state[0] = self.truck_distance - self.target_distance

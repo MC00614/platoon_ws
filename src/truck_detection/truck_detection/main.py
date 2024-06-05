@@ -108,6 +108,10 @@ class TruckDetection(Node):
             average_x = 30.0
             average_y = 0.0
 
+        # USE CLOSEST POINT
+        average_x = float(self.point_cloud_list[min_distance_idx][0])
+        average_y = float(self.point_cloud_list[min_distance_idx][1])
+
         self.publish_front_truck(average_x, average_y)
         # print(f'average_x = {average_x}')
         # print(f'average_y = {average_y}')
