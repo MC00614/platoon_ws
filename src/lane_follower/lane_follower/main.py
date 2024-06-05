@@ -21,7 +21,7 @@ class LateralControl(Node):
         node_name = f'truck{self.truck_id}_lateral_control'
         super().__init__(node_name)
         
-        self.lane_follower = LaneFollower(width=1280, height=720, max_steer=25.0, normal_throttle=1.0)
+        self.lane_follower = LaneFollower(width=640, height=480, max_steer=30.0, normal_throttle=1.0, k_o=0.5, k_c=0.5)
 
         topic_name = f'/platoon/truck{self.truck_id}/path'
         self.path_sub = self.create_subscription(
@@ -32,7 +32,7 @@ class LateralControl(Node):
         self.path_sub
 
         topic_name = f'/truck{self.truck_id}/steer_control'
-        self.steer_publisher = self.create_publisher(Float32, topic_name, 10)
+        self.steering_control_publisher_ = self.create_publisher(Float32, topic_name, 10)
 
     def path_callback(self, msg):
         middle_points = []
@@ -42,6 +42,7 @@ class LateralControl(Node):
 
         self.lane_follower.calculate_control(middle_points)
         _, steering = self.lane_follower.get_control()
+        steering = - steering
         self.publish_steering_control(steering)
 
     def publish_steering_control(self, steering_control):

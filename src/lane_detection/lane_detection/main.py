@@ -68,13 +68,15 @@ class LaneDetection(Node):
         path_msg.header.frame_id = 'map'
 
         for point in relative_points:
+            if point is None:
+                continue
             pose_stamped = PoseStamped()
             pose_stamped.header.stamp = path_msg.header.stamp
             pose_stamped.header.frame_id = 'map'
             pose_stamped.pose.position.x = float(point[0])
             pose_stamped.pose.position.y = float(point[1])
             pose_stamped.pose.position.z = 0.0
-            pose_stamped.pose.orientation = self.yaw_to_quaternion(point[2])
+            # pose_stamped.pose.orientation = self.yaw_to_quaternion(point[2])
             path_msg.poses.append(pose_stamped)
 
         self.path_publisher.publish(path_msg)
