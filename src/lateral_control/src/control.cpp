@@ -93,7 +93,7 @@ float Control::normalize_steer_command(float max_steer_deg) {
     else if (steer_deg < max_steer_deg * (-1)) {steer_deg = max_steer_deg * (-1);}
     std::cout << "Steer Command : " << steer_deg <<std::endl;
 
-    steer_deg *= 8.0;
+    // steer_deg *= 2.0;
 
     return steer_deg;
 }
