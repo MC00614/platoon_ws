@@ -43,11 +43,17 @@ class LaneDetection(Node):
         try:
             self.image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
             middle_points = self.image_processor.frame_processor(self.image)
-            height, width, channels = self.image.shape
-            relative_points = self.image_processor.calculate_relative_path(middle_points, height, width)
-            print(f"Middle Points : {relative_points}")
+
+            # FOR LANE FOLLOWER!!!!
+            relative_points = middle_points
+
+            # height, width, channels = self.image.shape
+            # relative_points = self.image_processor.calculate_relative_path(middle_points, height, width)
+            # print(f"Middle Points : {relative_points}")
             # print(f"Height: {height}, Width: {width}, Channels: {channels}")
             # PUBLISH HERE
+            
+            
             self.publish_path(relative_points)
 
             # cv2.imshow(f'truck {self.truck_id} image', self.image)
