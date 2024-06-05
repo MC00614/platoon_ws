@@ -51,8 +51,8 @@ class LaneFollower():
             print("Range ERROR")
             return
         
-        print(f'self.lane_offset = {self.lane_offset}')
-        print(f'self.lane_curvature = {self.lane_curvature}')
+        # print(f'self.lane_offset = {self.lane_offset}')
+        # print(f'self.lane_curvature = {self.lane_curvature}')
 
         self.steer = self.k_o * self.lane_offset + self.k_c * self.lane_curvature
         self.steer *= self.max_steer 
