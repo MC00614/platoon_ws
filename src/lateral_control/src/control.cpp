@@ -56,7 +56,7 @@ void Control::publisher_timer_callback() {
     this->controller.stanley_control(this->refPoses, this->current_velocity);
 
     this->steerCommand = this->controller.getDelta();
-    float normalize_steer= normalize_steer_command(3.5);
+    float normalize_steer = normalize_steer_command(3.5);
 
     // std::cout << "Steer Command : " << this->steerCommand * 180.0 / M_PI <<std::endl;
     // std::cout << "Decision Steer : " << normalize_steer << std::endl;

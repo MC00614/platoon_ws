@@ -29,6 +29,8 @@ void Stanley::update_state() {
 }
 
 void Stanley::stanley_steer_calc() {
+    if (!this->refPoses.size()) {return;}
+    
     double dx = this->refPoses[this->target_node].x;
     double dy = this->refPoses[this->target_node].y;
 
