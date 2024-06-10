@@ -24,12 +24,22 @@ class ImageProcessor():
 
     def frame_processor(self, image):
         warped_image = self.warp_image(image)
+        
+        edges = cv.Canny(warped_image, 10, 30)
+        cv.imshow('Canny', edges)
+        contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        cv.drawContours(edges, contours, -1, (255), 5)
+        cv.imshow('edges', edges)
 
         #Using HSV filter
         frame_HSV = cv.cvtColor(warped_image, cv.COLOR_BGR2HSV)
         #values are tested in testing script "hsv_filter". the 3rd value can be ajusted between 150-200
         image_hsv = cv.inRange(frame_HSV, self.hsv_values, (180, 255, 255))
-        # cv.imshow('hsv', image_hsv)
+        cv.imshow('hsv', image_hsv)
+        
+        add_image = cv.bitwise_and(edges, image_hsv)
+        cv.imshow('add_image', add_image)
+        image_hsv = add_image
 
         #apply the sliding window for left and right lane with base midpoint of lane at xm
         left, left_line = self.sliding_windows(image_hsv, warped_image, xm=self.first_left_box_middle_x)
@@ -67,7 +77,7 @@ class ImageProcessor():
         line = [[-1,-1,-1]]*num_windows
         midpoint = (xm, height-self.box_dim[0])
         im_h = self.sobel_inner_line(image, xm)
-        #cv.imshow('Sobel Image', im_h)
+        cv.imshow('Sobel Image', im_h)
         for i in range(num_windows):
             # masked_image = roi_boxes(im_h, midpoint)
             # cv.imshow('Masked Image', masked_image)
@@ -187,7 +197,7 @@ class ImageProcessor():
         if point is not None:
             cv.circle(draw_image, (point[0], point[1]), radius=5, color=(0, 255, 0), thickness=-1)
 
-        # cv.imshow("Hough Transformation", draw_image)
+        cv.imshow("Hough Transformation", draw_image)
 
     def calculate_middle_path(self, left, right):
         #calculate the middle of left and right lane with given parameters
