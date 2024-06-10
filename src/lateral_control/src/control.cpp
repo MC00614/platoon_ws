@@ -65,10 +65,6 @@ void Control::velocity_callback(const std_msgs::msg::Float32::SharedPtr velocity
 void Control::publisher_timer_callback() {
     if (!this->pathValid) { std::cout << "Path Message Receive Error" << std::endl; return;}
 
-    // stanley
-    this->controller.stanley_control(this->refPoses, this->current_velocity);
-    this->steerCommand = this->controller.getDelta();
-
     if (!this->refPoses.empty()) {
         this->setpoint = this->refPoses[0].yaw;   
         // std::cout << "X : " << this->refPoses[0].x << " Y : " << this->refPoses[0].y << " Yaw : " << rad2deg(this->refPoses[0].yaw) << std::endl; 
@@ -77,8 +73,12 @@ void Control::publisher_timer_callback() {
         return;
     }
 
+    // stanley
+    // this->controller.stanley_control(this->refPoses, this->current_velocity);
+    // this->steerCommand = this->controller.getDelta();
+
     // pid
-    // this->pid->Compute();
+    this->pid->Compute();
 
     float normalize_steer = normalize_steer_command(30.0);
 
