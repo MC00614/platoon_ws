@@ -1,10 +1,22 @@
 #include "control.h"
 
 Control::Control(int truck_id) : rclcpp::Node("truck" + std::to_string(truck_id) + "_lateral_control"), truck_id(truck_id) {
-    double k = 1.5;
-    double ks = 10.2;
+    // Stanley
+    // double k = 1.5;
+    // double ks = 10.2;
 
-    this->controller = Stanley(k, ks);
+    // this->controller = Stanley(k, ks);
+
+    // PID
+    double Kp = 1.0;
+    double Ki = 0.1;
+    double Kd = 0.01;
+
+    this->current_yaw = deg2rad(90.0);
+
+    this->pid = new PID(&(this->current_yaw), &(this->steerCommand), &(this->setpoint), Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
+
+    this->pid->SetMode(_PID_MODE_AUTOMATIC);
 
     this->pathValid = false;
     this->velocityValid = false;
@@ -25,7 +37,7 @@ Control::Control(int truck_id) : rclcpp::Node("truck" + std::to_string(truck_id)
         topic_name, 10);
 
     publisher_timer_ = this->create_wall_timer(
-        std::chrono::milliseconds(100),
+        std::chrono::milliseconds(1000),
         std::bind(&Control::publisher_timer_callback, this)
     );
 }
@@ -53,15 +65,33 @@ void Control::velocity_callback(const std_msgs::msg::Float32::SharedPtr velocity
 void Control::publisher_timer_callback() {
     if (!this->pathValid) { std::cout << "Path Message Receive Error" << std::endl; return;}
 
-    this->controller.stanley_control(this->refPoses, this->current_velocity);
+    // stanley
+    // this->controller.stanley_control(this->refPoses, this->current_velocity);
+    // this->steerCommand = this->controller.getDelta();
+    if (!this->refPoses.empty()) {
+        this->setpoint = this->refPoses[0].yaw;    
+        std::cout << "Set Point : " << this->setpoint << std::endl;
+    }
+    else {
+        return;
+    }
 
-    this->steerCommand = this->controller.getDelta();
-    float normalize_steer = normalize_steer_command(3.5);
+    // pid
+    if(this->pid->Compute()) {
+        std::cout << "PID Calculate" << std::endl;
+    }
+    else {
+        std::cout << "PID Failed" << std::endl; return;
+    }
+
+    std::cout << "Steer Data : " << this->steerCommand* 180.0 / M_PI << std::endl;
+
+    // float normalize_steer = normalize_steer_command(3.5);
 
     // std::cout << "Steer Command : " << this->steerCommand * 180.0 / M_PI <<std::endl;
     // std::cout << "Decision Steer : " << normalize_steer << std::endl;
 
-    this->publish_steer(normalize_steer);
+    // this->publish_steer(normalize_steer);
 }
 
 void Control::publish_steer(float steer) {
@@ -96,4 +126,12 @@ float Control::normalize_steer_command(float max_steer_deg) {
     // steer_deg *= 2.0;
 
     return steer_deg;
+}
+
+float Control::deg2rad(float angle) {
+    return angle * M_PI / 180.0;
+}
+
+float Control::rad2deg(float angle) {
+    return angle * 180.0 / M_PI;
 }
