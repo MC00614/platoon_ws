@@ -18,6 +18,10 @@ import cv2
 
 class LaneDetection(Node):
     def __init__(self, truck_id):
+        
+        # self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        # self.out = cv2.VideoWriter('output.avi', self.fourcc, 15, (640, 480))
+        
         self.truck_id = truck_id
         node_name = f'truck{self.truck_id}_lane_detection'
         super().__init__(node_name)
@@ -42,6 +46,7 @@ class LaneDetection(Node):
     def img_callback(self, msg):
         try:
             self.image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+            # self.out.write(self.image)
             middle_points = self.image_processor.frame_processor(self.image)
 
             # FOR LANE FOLLOWER!!!!
@@ -88,6 +93,13 @@ class LaneDetection(Node):
         quaternion.y = 0.0
         quaternion.z = math.sin(yaw / 2.0)
         return quaternion
+    
+    # def destroy_node(self):
+    #     super().destroy_node()
+    #     self.get_logger().info("releasing video")
+    #     # finish the video writing.
+    #     if self.out:
+    #         self.out.release()
             
 def main(args=None):
     rclpy.init(args=args)
