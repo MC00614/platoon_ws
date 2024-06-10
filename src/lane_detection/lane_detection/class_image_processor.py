@@ -187,7 +187,7 @@ class ImageProcessor():
         if point is not None:
             cv.circle(draw_image, (point[0], point[1]), radius=5, color=(0, 255, 0), thickness=-1)
 
-        # cv.imshow("Hough Transformation", draw_image)
+        cv.imshow("Hough Transformation", draw_image)
 
     def calculate_middle_path(self, left, right):
         #calculate the middle of left and right lane with given parameters

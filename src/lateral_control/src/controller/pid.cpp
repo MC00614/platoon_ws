@@ -18,7 +18,7 @@
 ------------------------------------------------------------------------------
 */
 
-#include "pid.h"
+#include "controller/pid.h"
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /* ~~~~~~~~~~~~~~~~ Constructor ~~~~~~~~~~~~~~~~ */
@@ -110,8 +110,8 @@ uint8_t PID::Compute(void)
 	now        = GetTime();
 	timeChange = (now - _lastTime);
 	
-	if (timeChange >= _sampleTime)
-	{
+	// if (timeChange >= _sampleTime)
+	// {
 		/* ..... Compute all the working error variables ..... */
 		input   = *_myInput;
 		error   = *_mySetpoint - input;
@@ -166,11 +166,11 @@ uint8_t PID::Compute(void)
 		
 		return _TRUE;
 		
-	}
-	else
-	{
-		return _FALSE;
-	}
+	// }
+	// else
+	// {
+	// 	return _FALSE;
+	// }
 	
 }
 
