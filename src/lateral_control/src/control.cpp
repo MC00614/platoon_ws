@@ -2,10 +2,10 @@
 
 Control::Control(int truck_id) : rclcpp::Node("truck" + std::to_string(truck_id) + "_lateral_control"), truck_id(truck_id) {
     // Stanley
-    // double k = 1.5;
-    // double ks = 10.2;
+    double k = 1.5;
+    double ks = 10.2;
 
-    // this->controller = Stanley(k, ks);
+    this->controller = Stanley(k, ks);
 
     // PID
     double Kp = 1.0;
@@ -66,38 +66,29 @@ void Control::publisher_timer_callback() {
     if (!this->pathValid) { std::cout << "Path Message Receive Error" << std::endl; return;}
 
     // stanley
-    // this->controller.stanley_control(this->refPoses, this->current_velocity);
-    // this->steerCommand = this->controller.getDelta();
+    this->controller.stanley_control(this->refPoses, this->current_velocity);
+    this->steerCommand = this->controller.getDelta();
+
     if (!this->refPoses.empty()) {
-        this->setpoint = this->refPoses[0].yaw;    
-        std::cout << "Set Point : " << this->setpoint << std::endl;
+        this->setpoint = this->refPoses[0].yaw;   
+        // std::cout << "X : " << this->refPoses[0].x << " Y : " << this->refPoses[0].y << " Yaw : " << rad2deg(this->refPoses[0].yaw) << std::endl; 
     }
     else {
         return;
     }
 
     // pid
-    if(this->pid->Compute()) {
-        std::cout << "PID Calculate" << std::endl;
-    }
-    else {
-        std::cout << "PID Failed" << std::endl; return;
-    }
+    // this->pid->Compute();
 
-    std::cout << "Steer Data : " << this->steerCommand* 180.0 / M_PI << std::endl;
+    float normalize_steer = normalize_steer_command(30.0);
 
-    // float normalize_steer = normalize_steer_command(3.5);
-
-    // std::cout << "Steer Command : " << this->steerCommand * 180.0 / M_PI <<std::endl;
-    // std::cout << "Decision Steer : " << normalize_steer << std::endl;
-
-    // this->publish_steer(normalize_steer);
+    this->publish_steer(normalize_steer);
 }
 
 void Control::publish_steer(float steer) {
     auto steer_msg = std::make_unique<std_msgs::msg::Float32>();
     steer_msg->data = steer;
-    std::cout << " Publish Steering : " << steer << std::endl;
+    // std::cout << " Publish Steering : " << steer << std::endl;
     this->steer_publisher_->publish(std::move(steer_msg));
 }
 
@@ -113,17 +104,15 @@ float Control::quat_to_yaw(const geometry_msgs::msg::Quaternion quat) {
 }
 
 float Control::normalize_steer_command(float max_steer_deg) {
-    // float max_steer_rad = max_steer_deg * M_PI /180.0;
-
     // Normalize the steer to the range -30 to 30
 
-    float steer_deg = ((this->steerCommand * 180.0 / M_PI) * (-1) + 90.0);
+    float steer_deg = (rad2deg(this->steerCommand) * (-1) + 90.0);
 
     if (steer_deg > max_steer_deg) {steer_deg = max_steer_deg;}
     else if (steer_deg < max_steer_deg * (-1)) {steer_deg = max_steer_deg * (-1);}
-    std::cout << "Steer Command : " << steer_deg <<std::endl;
+    std::cout << "Last Steer Command : " << steer_deg <<std::endl;
 
-    // steer_deg *= 2.0;
+    steer_deg *= -1;
 
     return steer_deg;
 }

@@ -25,7 +25,7 @@ public:
 private:
     int truck_id;
 
-    // Stanley controller;
+    Stanley controller;
     PID *pid;
 
     double current_yaw;

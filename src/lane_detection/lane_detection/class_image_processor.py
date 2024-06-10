@@ -219,7 +219,7 @@ class ImageProcessor():
                 relative_x2 = width - x2
                 relative_y2 = height - y2
 
-                yaw = math.atan2(relative_y2 - relative_y1, relative_x2 - relative_x1)
+                yaw = math.pi - math.atan2(relative_y2 - relative_y1, relative_x2 - relative_x1)
                 relative_middle.append((relative_x1, relative_y1, yaw))
         
         # Add the last point with the same yaw as the previous one
