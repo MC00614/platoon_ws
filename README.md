@@ -7,6 +7,8 @@ We use ROS2 Interface from [carla-virtual-platoon](https://github.com/AveesLab/c
 
 ---
 
+## Modification from carla-virtual-platoon
+
 ### Parameter Setting
 In `carla-virtual-platoon/config/config.yaml`
 - `rgbcam/pitch` : -45.0
@@ -24,6 +26,10 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
     ```cpp
     this->control.hand_brake = false
     ```
+
+---
+## Using platoon_ws
+
 ### Install
 - Clone Repository
     ```bash
