@@ -5,8 +5,6 @@ This Repository is for Developing & Testing SEA:ME [ADS_Truck-Platooning](https:
 
 We use ROS2 Interface from [carla-virtual-platoon](https://github.com/AveesLab/carla-virtual-platoon).
 
----
-
 ## Modification from carla-virtual-platoon
 
 ### Parameter Setting
@@ -27,7 +25,6 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
     this->control.hand_brake = false
     ```
 
----
 ## Using platoon_ws
 
 ### Install
