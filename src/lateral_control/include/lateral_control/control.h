@@ -39,6 +39,9 @@ private:
     bool pathValid;
     bool velocityValid;
 
+    double window_height;
+    double window_width;
+
     // Subscribe
     rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr path_subscription_;
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr velocity_subscription_;
@@ -58,4 +61,6 @@ private:
     float normalize_steer_command(float max_steer_deg);
     float deg2rad(float angle);
     float rad2deg(float angle);
+
+    std::vector<Path> extract_target_point();
 };

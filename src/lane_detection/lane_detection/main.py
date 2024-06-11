@@ -45,10 +45,10 @@ class LaneDetection(Node):
             middle_points = self.image_processor.frame_processor(self.image)
 
             # FOR LANE FOLLOWER!!!!
-            # relative_points = middle_points
+            relative_points = middle_points
 
-            height, width, channels = self.image.shape
-            relative_points = self.image_processor.calculate_relative_path(middle_points, height, width)
+            # height, width, channels = self.image.shape
+            # relative_points = self.image_processor.calculate_relative_path(middle_points, height, width)
             # print(f"Middle Points : {relative_points}")
             # print(f"Height: {height}, Width: {width}, Channels: {channels}")
             # PUBLISH HERE
@@ -76,7 +76,7 @@ class LaneDetection(Node):
             pose_stamped.pose.position.x = float(point[0])
             pose_stamped.pose.position.y = float(point[1])
             pose_stamped.pose.position.z = 0.0
-            pose_stamped.pose.orientation = self.yaw_to_quaternion(point[2])
+            # pose_stamped.pose.orientation = self.yaw_to_quaternion(point[2])
             path_msg.poses.append(pose_stamped)
 
         self.path_publisher.publish(path_msg)
