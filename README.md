@@ -28,27 +28,27 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
 ## Using platoon_ws
 
 ### Install
-- Clone Repository
-    ```bash
-    git clone https://github.com/MC00614/platoon_ws.git
-    ```
-- Build
-    ```bash
-    colcon build --symlink-install
-    ```
-- Source
-    ```bash
-    # Need to source for new terminal
-    source install/setup.bash
-    ```
-    ```bash
-    # or add in bashrc
-    vi ~/.bashrc
-    # Add this line at the bottom of bashrc
-    source install/setup.bash
-    # Source bashrc
-    source ~/.bashrc
-    ```
+Clone Repository
+```bash
+git clone https://github.com/MC00614/platoon_ws.git
+```
+Build
+```bash
+colcon build --symlink-install
+```
+Source
+```bash
+# Need to source for new terminal
+source install/setup.bash
+```
+```bash
+# or add in bashrc
+vi ~/.bashrc
+# Add this line at the bottom of bashrc
+source install/setup.bash
+# Source bashrc
+source ~/.bashrc
+```
 
 
 ### Launch
