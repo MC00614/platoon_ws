@@ -1,6 +1,11 @@
 # platoon_ws
 This Repository is for Developing & Testing SEA:ME [ADS_Truck-Platooning](https://github.com/SEA-ME/ADS_Truck-Platooning) Project.
+
+
+
 We use ROS2 Interface from [carla-virtual-platoon](https://github.com/AveesLab/carla-virtual-platoon).
+
+---
 
 ### Parameter Setting
 In `carla-virtual-platoon/config/config.yaml`
