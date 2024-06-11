@@ -1,4 +1,3 @@
-## carla-virtual-platoon Setting
 ### Parameter Setting
 In `carla-virtual-platoon/config/config.yaml`
 - `rgbcam/pitch` : -45.0
