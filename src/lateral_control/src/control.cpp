@@ -51,9 +51,9 @@ void Control::path_callback(const nav_msgs::msg::Path::SharedPtr path_msg) {
     Path refPose;
     for (size_t i = 0; i < path_msg->poses.size(); ++i) {
         refPose.x = path_msg->poses[i].pose.position.x;
-        refPose.y = path_msg->poses[i].pose.position.y * 10.0;
+        refPose.y = path_msg->poses[i].pose.position.y;
         // refPose.yaw = this->quat_to_yaw(path_msg->poses[i].pose.orientation);
-        std::cout << "X : " << refPose.x << " Y : " << refPose.y << std::endl;
+        // std::cout << "Raw Lane Info X : " << refPose.x << " Y : " << refPose.y << std::endl;
         this->refPoses.push_back(refPose);
     }
     this->pathValid = true;
@@ -68,10 +68,10 @@ void Control::velocity_callback(const std_msgs::msg::Float32::SharedPtr velocity
 void Control::publisher_timer_callback() {
     if (!this->pathValid) { std::cout << "Path Message Receive Error" << std::endl; return;}
 
+    std::vector<Path> relative_middle;
     if (!this->refPoses.empty()) {
-        std::vector<Path> relative_middle = extract_target_point();
+        relative_middle = extract_target_point();
         this->setpoint = relative_middle[0].yaw;  
-        std::cout << "X : " << this->refPoses[0].x << " Y : " << this->refPoses[0].y << " Yaw : " << rad2deg(this->refPoses[0].yaw) << std::endl; 
     }
     else {
         std::cout << "No Lane" << std::endl;
@@ -79,7 +79,7 @@ void Control::publisher_timer_callback() {
     }
 
     // stanley
-    this->controller.stanley_control(this->refPoses, this->current_velocity);
+    this->controller.stanley_control(relative_middle, this->current_velocity);
     this->steerCommand = this->controller.getDelta();
 
     // pid
@@ -111,10 +111,7 @@ float Control::quat_to_yaw(const geometry_msgs::msg::Quaternion quat) {
 float Control::normalize_steer_command(float max_steer_deg) {
     // Normalize the steer to the range -30 to 30
 
-    std::cout << "Target Steer : " << rad2deg(this->setpoint) << std::endl;
-    std::cout << "Input Steer Command : " << rad2deg(this->steerCommand) << std::endl;
     float steer_deg = (rad2deg(this->steerCommand) * (-1) + 90.0);
-    std::cout << "Output Steer Command : " << steer_deg << std::endl;
 
     if (steer_deg > max_steer_deg) {steer_deg = max_steer_deg;}
     else if (steer_deg < max_steer_deg * (-1)) {steer_deg = max_steer_deg * (-1);}
@@ -130,9 +127,26 @@ std::vector<Path> Control::extract_target_point() {
     Path relative_path;
 
     // Check if refPoses has at least two elements to avoid out of range access
-    if (this->refPoses.size() < 2) {
-        std::cout << "refPoses does not have enough points." << std::endl;
-        return relative_middle; // return an empty vector
+    if (this->refPoses.size() == 1) {
+        float pose_x = this->window_width / 2.0;
+        float pose_y = this->window_height;
+
+        float pose_x1 = refPoses[0].x;
+        float pose_y1 = refPoses[0].y;
+
+        float relative_x = this->window_width - pose_x;
+        float relative_y = this->window_height - pose_y;
+        float relative_x1 = this->window_width - pose_x1;
+        float relative_y1 = this->window_height - pose_y1;
+
+        float yaw = M_PI - atan2(relative_y1 - relative_y, relative_x1 - relative_x);
+
+        relative_path.x = relative_x1;
+        relative_path.y = relative_y1 * 10;
+        relative_path.yaw = yaw;
+        relative_middle.push_back(relative_path);
+
+        return relative_middle;
     }
 
     for (size_t i = 0; i < this->refPoses.size() - 1; ++i) {
@@ -161,7 +175,7 @@ std::vector<Path> Control::extract_target_point() {
         float yaw = M_PI - atan2(relative_y2 - relative_y1, relative_x2 - relative_x1);
 
         relative_path.x = relative_x1;
-        relative_path.y = relative_y1;
+        relative_path.y = relative_y1 * 10;
         relative_path.yaw = yaw;
         relative_middle.push_back(relative_path);
     }
@@ -172,7 +186,7 @@ std::vector<Path> Control::extract_target_point() {
         float y = this->refPoses.back().y;
 
         float relative_x = this->window_width - x;
-        float relative_y = this->window_height - y;
+        float relative_y = (this->window_height - y) * 10;
         float last_yaw = relative_middle.back().yaw;
         relative_middle.push_back({relative_x, relative_y, last_yaw});
     }
