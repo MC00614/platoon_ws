@@ -92,6 +92,8 @@ class DistanceControl(Node):
         # print(f'distance = {self.state[0]}')
 
         optimal_velocity = self.k_v * np.dot(self.K, self.state)[0]
+        if self.target_velocity * 1.3 < optimal_velocity:
+            optimal_velocity = self.target_velocity * 1.3
         # print(f'optimal_velocity = {optimal_velocity}')
         if (0 < optimal_velocity < 0.05):
             optimal_velocity = 0.0
