@@ -10,6 +10,8 @@ We use ROS2 Interface from [carla-virtual-platoon](https://github.com/AveesLab/c
 ### Parameter Setting
 In `carla-virtual-platoon/config/config.yaml`
 - `rgbcam/pitch` : -45.0
+- `lidar/horizontal_fov` : "120.0f"
+
 
 ### Bridge Setting
 In `carla-virtual-platoon/nodes/TruckControl.cpp`
