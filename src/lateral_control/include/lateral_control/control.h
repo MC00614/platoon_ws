@@ -4,6 +4,7 @@
 #include "utils/car_struct.h"
 
 #include "controller/stanley.h"
+#include "controller/pid.h"
 
 #include "rclcpp/rclcpp.hpp"
 #include "nav_msgs/msg/path.hpp"
@@ -25,14 +26,22 @@ private:
     int truck_id;
 
     Stanley controller;
+    PID *pid;
+
+    double current_yaw;
+    double steerCommand;
+    double setpoint;
 
     std::vector<Path> refPoses;
 
-    float steerCommand;
     float current_velocity;
 
     bool pathValid;
     bool velocityValid;
+    float normalize_steer;
+
+    double window_height;
+    double window_width;
 
     // Subscribe
     rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr path_subscription_;
@@ -51,4 +60,8 @@ private:
     float quat_to_yaw(const geometry_msgs::msg::Quaternion quat);
 
     float normalize_steer_command(float max_steer_deg);
+    float deg2rad(float angle);
+    float rad2deg(float angle);
+
+    std::vector<Path> extract_target_point();
 };
