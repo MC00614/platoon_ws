@@ -66,7 +66,10 @@ void Control::velocity_callback(const std_msgs::msg::Float32::SharedPtr velocity
 }
 
 void Control::publisher_timer_callback() {
-    if (!this->pathValid) { std::cout << "Path Message Receive Error" << std::endl; return;}
+    if (!this->pathValid) { 
+        // std::cout << "Path Message Receive Error" << std::endl;
+        return;
+    }
 
     std::vector<Path> relative_middle;
     if (!this->refPoses.empty()) {
@@ -74,7 +77,7 @@ void Control::publisher_timer_callback() {
         this->setpoint = relative_middle[0].yaw;  
     }
     else {
-        std::cout << "No Lane" << std::endl;
+        // std::cout << "No Lane" << std::endl;
         this->publish_steer(this->normalize_steer);
         return;
     }
@@ -116,7 +119,7 @@ float Control::normalize_steer_command(float max_steer_deg) {
 
     if (steer_deg > max_steer_deg) {steer_deg = max_steer_deg;}
     else if (steer_deg < max_steer_deg * (-1)) {steer_deg = max_steer_deg * (-1);}
-    std::cout << "Last Steer Command : " << steer_deg <<std::endl;
+    // std::cout << "Last Steer Command : " << steer_deg <<std::endl;
 
     steer_deg *= -1;
 
