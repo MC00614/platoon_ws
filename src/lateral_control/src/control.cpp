@@ -40,7 +40,7 @@ Control::Control(int truck_id) : rclcpp::Node("truck" + std::to_string(truck_id)
         topic_name, 10);
 
     publisher_timer_ = this->create_wall_timer(
-        std::chrono::milliseconds(1000),
+        std::chrono::milliseconds(100),
         std::bind(&Control::publisher_timer_callback, this)
     );
 }
@@ -75,6 +75,7 @@ void Control::publisher_timer_callback() {
     }
     else {
         std::cout << "No Lane" << std::endl;
+        this->publish_steer(this->normalize_steer);
         return;
     }
 
@@ -85,9 +86,9 @@ void Control::publisher_timer_callback() {
     // pid
     // this->pid->Compute();
 
-    float normalize_steer = normalize_steer_command(30.0);
+    this->normalize_steer = normalize_steer_command(30.0);
 
-    this->publish_steer(normalize_steer);
+    this->publish_steer(this->normalize_steer);
 }
 
 void Control::publish_steer(float steer) {

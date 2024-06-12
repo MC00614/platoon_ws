@@ -38,6 +38,7 @@ private:
 
     bool pathValid;
     bool velocityValid;
+    float normalize_steer;
 
     double window_height;
     double window_width;
