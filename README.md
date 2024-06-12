@@ -21,6 +21,8 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
     if (this->control.hand_brake == true ) {
         if (control_value > 0.5) this->control.hand_brake = false;
     }
+    else {
+    }
     ```
     to 
     ```cpp
