@@ -1,28 +1,42 @@
 from launch import LaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, OpaqueFunction,Shutdown
+from launch.substitutions import LaunchConfiguration, TextSubstitution
 import os
 from ament_index_python.packages import get_package_share_directory
 
+def generate_launchs(context, *, num_trucks):
+    launch_descriptions = []
+    package_names = ['lane_detection', 'lane_follower', 'truck_detection', 'longitudianl_control']
+    for package_name in package_names:
+        launch_file_path = os.path.join(
+            get_package_share_directory(package_name),
+            'launch',
+            f'{package_name}.launch.py'
+        )
+        launch_descriptions.append(
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(launch_file_path),
+                launch_arguments={'NumTrucks': num_trucks}.items()
+            )
+        )
+    return launch_descriptions
+
+def launch_setup(context):
+    num_trucks = LaunchConfiguration('NumTrucks').perform(context)
+    return generate_launchs(context, num_trucks=num_trucks)
+
+
 def generate_launch_description():
-    for package_name in 
-    launch_file_path = os.path.join(
-        get_package_share_directory('lane_follower'),
-        'launch',
-        'lane_follower.launch.py'
+
+    declare_num_trucks = DeclareLaunchArgument(
+        'NumTrucks',
+        default_value='1',
+        description='Number of trucks'
     )
 
     return LaunchDescription([
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(included_launch_file_path)
-        ),
-        # 주 launch 파일에서 추가로 실행할 노드
-        Node(
-            package='my_package',
-            executable='another_node',
-            name='my_main_node',
-            output='screen',
-            parameters=[{'paramA': 'valueA', 'paramB': 'valueB'}]
-        )
+        declare_num_trucks,
+        OpaqueFunction(function=launch_setup)
     ])
