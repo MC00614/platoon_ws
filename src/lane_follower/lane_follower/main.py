@@ -21,7 +21,7 @@ class LateralControl(Node):
         node_name = f'truck{self.truck_id}_lateral_control'
         super().__init__(node_name)
         
-        self.lane_follower = LaneFollower(width=640, height=480, max_steer=30.0, normal_throttle=1.0, k_o=0.5, k_c=0.5)
+        self.lane_follower = LaneFollower(width=640, height=480, max_steer=30.0, normal_throttle=1.0, k_o=0.4, k_c=0.6)
 
         topic_name = f'/platoon/truck{self.truck_id}/path'
         self.path_sub = self.create_subscription(
