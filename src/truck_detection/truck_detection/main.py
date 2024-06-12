@@ -91,7 +91,7 @@ class PointAnalyzer:
         segments = []
         self.point_cloud_list = [point for point in self.point_cloud_list if not (point[0] == 0.0 and point[1] == 0.0)]
         print("Total points", len(self.point_cloud_list))
-        if len(self.point_cloud_list) > 1:
+        if len(self.point_cloud_list) > 3:
             sorted_seg = sorted(self.point_cloud_list, key=lambda point: point[1])
             #print(sorted_seg)
             if len(sorted_seg) >= 20:
