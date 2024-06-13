@@ -1,11 +1,16 @@
 # platoon_ws
-This Repository is for Developing & Testing SEA:ME [ADS_Truck-Platooning](https://github.com/SEA-ME/ADS_Truck-Platooning) Project.
+This Repository is for Developing & Testing SEA:ME [ADS_Truck-Platooning](https://github.com/SEA-ME/ADS_Truck-Platooning) Project, based on ROS2 Interface from [carla-virtual-platoon](https://github.com/AveesLab/carla-virtual-platoon).
 
+## Features
 
+### [Lane Detection](src/lane_detection/README.md)
+### [Truck Detection](src/truck_detection/README.md)
+### [Lateral Control](src/lateral_control/README.md)
+### [Longitudinal Control](src/longitudianl_control/README.md)
 
-We use ROS2 Interface from [carla-virtual-platoon](https://github.com/AveesLab/carla-virtual-platoon).
+---
 
-## Modification from carla-virtual-platoon
+## Modification in carla-virtual-platoon
 
 ### Parameter Setting
 In `carla-virtual-platoon/config/config.yaml`
@@ -27,7 +32,7 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
     this->control.hand_brake = false
     ```
 
-## Using platoon_ws
+## How to use platoon_ws
 
 ### Install
 - Clone Repository
