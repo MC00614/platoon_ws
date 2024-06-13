@@ -6,7 +6,7 @@ This Repository is for Developing & Testing SEA:ME [ADS_Truck-Platooning](https:
 ROS2 Bridge is from [carla-virtual-platoon](https://github.com/AveesLab/carla-virtual-platoon) Interface.
 
 ## Structure
-![Structure](platoon.drawio.png)
+![Structure](doc/platoon.drawio.png)
 
 ## Features
 ### [Lane Detection](src/lane_detection/README.md)
