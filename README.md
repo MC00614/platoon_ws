@@ -2,8 +2,10 @@
 This Repository is for Developing & Testing SEA:ME [ADS_Truck-Platooning](https://github.com/SEA-ME/ADS_Truck-Platooning) Project,
 based on ROS2 Interface from [carla-virtual-platoon](https://github.com/AveesLab/carla-virtual-platoon).
 
-## Features
+## Structure
+![Structure](platoon.drawio.png)
 
+## Features
 ### [Lane Detection](src/lane_detection/README.md)
 ### [Truck Detection](src/truck_detection/README.md)
 ### [Lateral Control](src/lateral_control/README.md)
