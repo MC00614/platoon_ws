@@ -9,3 +9,6 @@
 - `PID Controller` is working in every truck to calculate `optimal thrtolle` to reduce velocity error.
 - For leading truck, `target velocity` is used.
 - For following trucks, `optimal velocity`, which is calculated by `Distance Controller`, is used.
+
+## Dependency
+- Python [control](https://pypi.org/project/control/) package
