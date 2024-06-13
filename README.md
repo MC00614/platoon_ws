@@ -24,13 +24,7 @@ In `carla-virtual-platoon/config/config.yaml`
 ### Bridge Setting
 In `carla-virtual-platoon/nodes/TruckControl.cpp`
 
-- Change `line 30 ~ 32` from below
-    ```cpp
-    if (this->control.hand_brake == true ) {
-        if (control_value > 0.5) this->control.hand_brake = false;
-    }
-    ```
-    to 
+- To release hand brake initially, Add this line between `line 29, 30`
     ```cpp
     this->control.hand_brake = false
     ```
