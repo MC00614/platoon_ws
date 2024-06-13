@@ -2,7 +2,7 @@
 
 ## Distance Controller
 - `LQR (Linear Quadratic Regulator) Controller` is implemented to deal with between `distance error` and `velocity error` from reference (target) value.
-- This controller is only running in `following trucks`, not in leading one.
+- This controller is only running in `following trucks`, not in leading ones.
 - Output of this controller is `optimal velocity` to reduce distance error while avoid collision.
 
 ## Velocity Controller
