@@ -40,11 +40,12 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
     ```bash
     colcon build --symlink-install
     ```
-- Source
+- Source (Option 1)
     ```bash
     # Need to source for new terminal
     source install/setup.bash
     ```
+- Source (Option 2)
     ```bash
     # or add in bashrc
     vi ~/.bashrc
@@ -56,7 +57,7 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
 
 
 ### Launch
-- Launch all together
+- Launch all together (Option 1)
     ```bash
     # Set One Truck
     ros2 launch platoon_launch platoon_launch.launch.py
@@ -66,7 +67,7 @@ In `carla-virtual-platoon/nodes/TruckControl.cpp`
     ros2 launch platoon_launch platoon_launch.launch.py NumTrucks:=3
     ```
 
-- Launch Seperately
+- Launch Seperately (Option 2)
     ```bash
     # in each terminal
     ros2 launch lane_detection lane_detection.launch.py
