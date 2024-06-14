@@ -25,6 +25,7 @@ ROS2 Bridge is from [carla-virtual-platoon](https://github.com/AveesLab/carla-vi
     ```
 - Build
     ```bash
+    cd platoon_ws
     colcon build --symlink-install
     ```
 - Source (Option 1)
