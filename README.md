@@ -28,19 +28,10 @@ ROS2 Bridge is from [carla-virtual-platoon](https://github.com/AveesLab/carla-vi
     cd platoon_ws
     colcon build --symlink-install
     ```
-- Source (Option 1)
+- Source
     ```bash
     # Need to source for new terminal
     source install/setup.bash
-    ```
-- Source (Option 2)
-    ```bash
-    # or add in bashrc
-    vi ~/.bashrc
-    # Add this line at the bottom of bashrc
-    source install/setup.bash
-    # Source bashrc
-    source ~/.bashrc
     ```
 
 
