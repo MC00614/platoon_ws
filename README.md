@@ -9,10 +9,10 @@ ROS2 Bridge is from [carla-virtual-platoon](https://github.com/AveesLab/carla-vi
 ![Structure](doc/platoon_structure.drawio.png)
 
 ## Features
-### [Lane Detection](src/lane_detection/README.md)
-### [Truck Detection](src/truck_detection/README.md)
-### [Lateral Control](src/lateral_control/README.md)
-### [Longitudinal Control](src/longitudianl_control/README.md)
+### [Lane Detection](src/lane_detection)
+### [Truck Detection](src/truck_detection)
+### [Lateral Control](src/lateral_control)
+### [Longitudinal Control](src/longitudianl_control)
 
 ---
 
