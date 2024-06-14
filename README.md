@@ -16,23 +16,7 @@ ROS2 Bridge is from [carla-virtual-platoon](https://github.com/AveesLab/carla-vi
 
 ---
 
-## Modification in carla-virtual-platoon
-
-### Parameter Setting
-In `carla-virtual-platoon/config/config.yaml`
-- `rgbcam/pitch` : -45.0
-- `lidar/horizontal_fov` : "120.0f"
-
-
-### Bridge Setting
-In `carla-virtual-platoon/nodes/TruckControl.cpp`
-
-- To release hand brake initially, Add this line between `line 29, 30`
-    ```cpp
-    this->control.hand_brake = false
-    ```
-
-## How to use platoon_ws
+## User Guide 
 
 ### Install
 - Clone Repository
