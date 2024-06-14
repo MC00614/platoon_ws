@@ -11,7 +11,7 @@ class VelocityControl(Node):
         node_name = f'truck{self.truck_id}_velocity_controller'
         super().__init__(node_name)
         
-        topic_name = f'/truck{self.truck_id}/velocity_control'
+        topic_name = f'/truck{self.truck_id}/throttle_control'
         self.velocity_control_publisher_ = self.create_publisher(Float32, topic_name, 10)
 
         topic_name = f'/truck{self.truck_id}/velocity'
