@@ -81,7 +81,7 @@ class DistanceControl(Node):
         front_truck_y = msg.position.y
 
         x_weight = 1.0
-        y_weight = 0.5
+        y_weight = 0.0
         self.truck_distance = (x_weight * (front_truck_x**2) + y_weight * (front_truck_y**2))**0.5
         # self.truck_distance = x_weight * front_truck_x + y_weight * (front_truck_y**2))**0.5
     

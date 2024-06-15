@@ -5,6 +5,8 @@
 - This controller is only running in `following trucks`, not in leading ones.
 - Output of this controller is `optimal velocity` to reduce distance error while avoid collision.
 
+![Structure](doc/distance_control.png)
+
 ## Velocity Controller
 - `PID Controller` is working in every truck to calculate `optimal thrtolle` to reduce velocity error.
 - For leading truck, `target velocity` is used.
