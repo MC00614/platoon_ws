@@ -38,7 +38,7 @@ class KeyboardControl(Node):
             self.steer_control = 0.0
         
         if keys[pygame.K_w]:
-            self.velocity_control = min(self.velocity_control + 1.0, 30.0)  # Forward
+            self.velocity_control = min(self.velocity_control + 1.0, 1.0)  # Forward
         elif keys[pygame.K_s]:
             self.velocity_control = max(self.velocity_control - 1.0, -30.0)  # Backward
         else:

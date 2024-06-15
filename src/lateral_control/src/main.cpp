@@ -2,15 +2,17 @@
 
 int main(int argc, char *argv[]) {
     rclcpp::init(argc, argv);
+    rclcpp::NodeOptions options;
+    options.arguments(std::vector<std::string>(argv, argv + argc));
+    std::string truck_id_arg = "--truck_id=";
     int truck_id = 0;
-    for (int i = 1; i < argc; ++i) {
-        if (std::string(argv[i]) == "--truck_id") {
-            if (i + 1 < argc) {
-                truck_id = std::stoi(argv[i + 1]);
-            } else {
-                std::cerr << "No truck ID specified after --truck_id" << std::endl;
-                return 1;
-            }
+    for (int i = 0; i < argc; ++i)
+    {
+        std::string arg = argv[i];
+        if (arg.find(truck_id_arg) == 0)
+        {
+            std::string truck_id_str = arg.substr(truck_id_arg.length());
+            truck_id = std::stoi(truck_id_str);
         }
     }
 

@@ -50,6 +50,7 @@ add_executable(${PROJECT_NAME}
   src/main.cpp
   src/control.cpp
   src/controller/stanley.cpp
+  src/controller/pid.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME} 
