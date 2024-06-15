@@ -10,5 +10,7 @@
 - For leading truck, `target velocity` is used.
 - For following trucks, `optimal velocity`, which is calculated by `Distance Controller`, is used.
 
+![Structure](doc/velocity_control.png)
+
 ## Dependency
 - Python [control](https://pypi.org/project/control/) package
