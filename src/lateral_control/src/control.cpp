@@ -2,8 +2,8 @@
 
 Control::Control(int truck_id) : rclcpp::Node("truck" + std::to_string(truck_id) + "_lateral_control"), truck_id(truck_id) {
     // Stanley
-    double k = 1.5;
-    double ks = 10.2;
+    double k = 1.7;
+    double ks = 22.2;
 
     this->controller = Stanley(k, ks);
 
@@ -179,7 +179,7 @@ std::vector<Path> Control::extract_target_point() {
         float yaw = M_PI - atan2(relative_y2 - relative_y1, relative_x2 - relative_x1);
 
         relative_path.x = relative_x1;
-        relative_path.y = relative_y1 * 10;
+        relative_path.y = relative_y1 * 20;
         relative_path.yaw = yaw;
         relative_middle.push_back(relative_path);
     }
